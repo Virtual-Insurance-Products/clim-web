@@ -1,0 +1,13 @@
+#+TITLE: clim-web.asd
+
+* Introduction
+This builds on [[https://github.com/Virtual-Insurance-Products/vip-clim-core][vip-clim-core.asd]] to allow building of web applications
+with a CLIM-like framework.
+
+The repository
+https://github.com/Virtual-Insurance-Products/clim-web-demo
+demonstrates the use of this system and /also/ includes static
+resources which are needed for it to work. I should probably move
+those resources into here. 
+
+
