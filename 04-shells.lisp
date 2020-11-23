@@ -2,38 +2,6 @@
 (in-package :clim-web)
 
 
-;; Definition of 'shells' - ie pages which just invoke commands and display stuff
-;; Very useful for quickly making bits of UI and *might* be good enough to build everything inside of them
-
-
-
-
-;; It would be nice to try and get the basic CLIM stuff deployed and live fairly soon because it will give me an
-;; easy way to provide additional functionality (like clearing wizard page cache) to people.
-
-;; In order to make that viable I guess I will need to provide some starting point to find the objects one would
-;; like to operate on...
-
-;; Is there a general way I could do that? 
-
-;; Also, is the CLIM code in a state that it will load cleanly? 
-
-;; I will also make an rcall handler for when we want to call commands that way
-;; it will be used for when you don't want commands to
-
-
-;; Some examples of web pages which can be used as 'shells' - that is,
-;; simple web pages for doing arbitrary things with presentable object
-;; and commands.
-
-;; Probably a very small number of these would be sufficient to do
-;; almost everything.
-
-;; I would like to have one which allows everything from the initial
-;; login stage, so it might be necessary to have some kind of initial
-;; object which presents as such a login page.
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; Initial command tables...
@@ -44,27 +12,6 @@
 
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; The page below is a WIP
-
-;; the link-view links to a page defined as follows:-
-;; (more or less)
-
-;; this shouldn't have many commands, but should have some
-
-;; to get the command table dynamically bound for everything I will wrap the standard
-;; dispatcher...
-
-;; then I will make a dispatcher which executes a command...
-
-
-
-;; the above basically works
-;; it would be nice to have prefixes that just map straightforwardly to command executors
-;; it would also be good for the shell page to have a way of jumping to a different page with a redirect
-;; if something returns (say) a web monad.
-
 
 (define-condition object-needs-redisplay (condition)
   ((object :initarg :object :reader redisplay-object)
