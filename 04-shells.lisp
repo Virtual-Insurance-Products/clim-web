@@ -69,7 +69,7 @@
                              command-or-string)))
       (when input-command
         (let* ((command (find-command (first input-command) (active-command-table)))
-               (return-type (when command (clim-internals::command-return-type command))))
+               (return-type (when command (climwi::command-return-type command))))
 
           (if (eq return-type 'web-application)
               (ajax-js `(setf window.location
@@ -229,7 +229,7 @@
 
                ;; so I can look for options...
                (when command
-                 (find-command (first command) clim-internals::*active-command-table*))
+                 (find-command (first command) climwi::*active-command-table*))
                :== cte
 
                command <- 
@@ -320,7 +320,7 @@
              do
                (setf command (web (handle-and-get-command command)))
                (when (and command
-                          (clim-internals::incomplete-command-p (accept-from-string 'command command)))
+                          (climwi::incomplete-command-p (accept-from-string 'command command)))
                  (loop for c = (web (complete-command command))
                     while (eq c :error)
                     finally (setf command c)))))))))
@@ -349,12 +349,12 @@
     ;; also, this does not recurse yet. How can I fix that?
     - (draw-context (list name "hints")
                     (mhtml
-                      (when (and command (clim-internals::incomplete-command-p command))
+                      (when (and command (climwi::incomplete-command-p command))
                         (let ((parameters (cdr command)))
                           (loop for p in parameters
                                when (and (listp p)
                                          (eq (first p)
-                                             clim-internals::*incomplete-command-marker*))
+                                             climwi::*incomplete-command-marker*))
                              do (let ((actual-type (third (second p))))
                                   (with-presentation-type-decoded
                                       (type-name)

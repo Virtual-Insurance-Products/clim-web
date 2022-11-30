@@ -15,7 +15,7 @@
 
 (define-presentation-method default-view-for-object ((x list) (type command) (stream (eql :web-monad)))
   (make-instance 'form-view :name (list "_cmd" (first x))
-                 :options (append clim-internals::other-options
+                 :options (append climwi::other-options
                                   '(:child-field-options
                                     (:label-wrapper "label"
                                      :field-wrapper "field")))))
@@ -40,11 +40,11 @@
                  (awhen (field-option view :title)
                    (html (:h2
                           (:print (cond ((stringp it) it)
-                                        (it (clim-internals::command-name command))))))))
+                                        (it (climwi::command-name command))))))))
              
              parameters <- (maccept nil ; not used
-                                    (clim-internals::make-parameter-list
-                                     (clim-internals::command-parameters command))
+                                    (climwi::make-parameter-list
+                                     (climwi::command-parameters command))
                                     :view (update-slots view
                                                         'given-values (cdr object)))
 
@@ -52,7 +52,7 @@
                             (msubmit (list (field-name view) :submit)
                                      (if (stringp it)
                                          it
-                                         (clim-internals::command-name command)))
+                                         (climwi::command-name command)))
                             (unit t))
 
              (cons (first object) parameters)

@@ -38,7 +38,7 @@
 ;; A general selection tracking mechansim...
 (defmethod selected-p ((x t)) nil)
 
-(defmethod clim-internals::%do-output-as-presentation ((stream (eql :web-monad)) object type content
+(defmethod climwi::%do-output-as-presentation ((stream (eql :web-monad)) object type content
                                        &key (class (if (selected-p object)
                                                        "selected" ; "selected presentation"
                                                        nil ; "presentation"
@@ -46,7 +46,7 @@
   
   (declare (ignore event-handlers))
   (melement (funcall content)
-    (clim-internals::%do-output-as-presentation
+    (climwi::%do-output-as-presentation
      :html object type
      (lambda ()
        (draw it))
@@ -56,14 +56,14 @@
 
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (defmethod clim-internals::type-arg-position ((name (eql 'object-html-element))) 1))
+  (defmethod climwi::type-arg-position ((name (eql 'object-html-element))) 1))
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (defmethod clim-internals::type-arg-position ((name (eql 'object-html-class))) 1))
+  (defmethod climwi::type-arg-position ((name (eql 'object-html-class))) 1))
 
 (defun object-html-element (object type view)
-  (clim-internals::funcall-presentation-generic-function object-html-element object type view))
+  (climwi::funcall-presentation-generic-function object-html-element object type view))
 (defun object-html-class (object type view)
-  (clim-internals::funcall-presentation-generic-function object-html-class object type view))
+  (climwi::funcall-presentation-generic-function object-html-class object type view))
 
 (define-presentation-method object-html-element ((object t) (type t) (view t))
   type ; ignored
@@ -75,7 +75,7 @@
 ;; (object-html-element 12 'integer :asd)
 
 
-(defmethod clim-internals::%do-output-as-presentation ((stream (eql :html)) object type content
+(defmethod climwi::%do-output-as-presentation ((stream (eql :html)) object type content
                                                        &key
                                                          (element-type nil)
                                                          (class (if (selected-p object)
@@ -124,7 +124,7 @@
                                                e)
                                              (events-for-object (event-matches object type)
                                                                 event-handlers))))
-                                 (clim-internals::all-possible-translations object type
+                                 (climwi::all-possible-translations object type
                                                                             (active-command-table)))))
 
            (list object type))
@@ -133,13 +133,13 @@
 
 (defun web-present (stream object type view acceptably sensitive)
   (flet ((draw ()
-           (clim-internals::funcall-presentation-generic-function
+           (climwi::funcall-presentation-generic-function
             present object type stream view
             :acceptably acceptably
             ;; :for-context-type for-context-type
             )))
     (if sensitive
-        (clim-internals::%do-output-as-presentation stream object type #'draw
+        (climwi::%do-output-as-presentation stream object type #'draw
                                                     :element-type (object-html-element object type view)
                                                     :class (object-html-class object type view)
                                                     :event-handlers *monadic-event-handlers*)
@@ -168,12 +168,12 @@
 
 ;; (present 12 'integer :stream :html)
 
-;; #'clim-internals::%present 
+;; #'climwi::%present 
 
 ;; default web-monad implementation using just the html one...
 (define-presentation-method present ((object t) (type t) (stream (eql :web-monad))
                                      view &key acceptably)
-  (mhtml (clim-internals::funcall-presentation-generic-function present
+  (mhtml (climwi::funcall-presentation-generic-function present
                                                                 object type :html view :acceptably acceptably)))
 
 ;; for a default present method for html stream we can just present the object to a string
@@ -199,11 +199,11 @@
   acceptably type ; muffle warning
 
   (html
-    (:noescape (:print (or (html-currency-symbol climi::code) "")))
+    (:noescape (:print (or (html-currency-symbol climwi::code) "")))
     
     (:format "~/dollar/" object)
-    (unless (member climi::code '(:gbp :usd :eur))
-      (html (:print (symbol-name climi::code))))))
+    (unless (member climwi::code '(:gbp :usd :eur))
+      (html (:print (symbol-name climwi::code))))))
 
 ;; These all work nicely now
 ;; (present 23 '(currency :usd) :stream :html :view (make-instance 'textual-view))
@@ -238,7 +238,7 @@
                                      &key acceptably)
   acceptably ; ignore
   (loop for a in x
-     for item-type in climi::??parameters
+     for item-type in climwi::??parameters
      do (if (member view '(:ul :ol))
             (html (:li (html-present a item-type)))
             (html-present a item-type))))

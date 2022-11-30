@@ -95,7 +95,7 @@
   ;; (format stream url-prefix)
   (let* ((cte (or (find-command (first command) (active-command-table))
                   (error "Command not found: ~A" (first command))))
-         (return-type (clim-internals::command-return-type cte)))
+         (return-type (climwi::command-return-type cte)))
     (awhen (absolute-url-prefix view)
       (write-sequence it stream))
     (cond ((eq return-type 'web-application)
@@ -105,7 +105,7 @@
                                   (cons (first command)
                                         (with-presentation-type-decoded
                                             (name parameters)
-                                            (clim-internals::command-parameters-type cte)
+                                            (climwi::command-parameters-type cte)
                                           (declare (ignore name))
                                           (loop for p in parameters
                                              for v in (cdr command)
@@ -136,7 +136,7 @@
   acceptably
   ;; if the command is incomplete then we should make a link which pops up the usual form asking for the
   ;; details.
-  (let ((use-cp (or (clim-internals::incomplete-command-p command)
+  (let ((use-cp (or (climwi::incomplete-command-p command)
                     (not (presentation-typep command '(command :return-type
                                                        (or web-application command)))))))
     (html (<> :a :href (if use-cp
@@ -150,7 +150,7 @@
                                      '((unless (confirm "Are you sure?")
                                          (return nil))))
 
-                                ,(command-option (find-command command clim-internals::*active-command-table*)
+                                ,(command-option (find-command command climwi::*active-command-table*)
                                                  :parenscript)
                                 (event.stop-propagation)
                                 (event.prevent-default)
@@ -207,7 +207,7 @@
     
     parameters <- (if cte
                       (with-presentation-type-decoded (name parameters)
-                          (clim-internals::command-parameters-type cte)
+                          (climwi::command-parameters-type cte)
                         (declare (ignore name))
                         (mmapcar :web-monad
                                  (lambda (p)
@@ -280,7 +280,7 @@
     (mmapcar :web-monad
              (lambda (command)
                (let ((first-param (with-presentation-type-decoded (name params)
-                                              (clim-internals::command-parameters-type command)
+                                              (climwi::command-parameters-type command)
                                             (declare (ignore name))
                                             (first params))))
                  ;; execute some client side parenscript AND do an ajax call
@@ -507,7 +507,7 @@ table.clim td, table.clim th {
              (*package* package)
              (*m-entity* entity)
              (*clim-web-manager* self)
-             (clim-internals::*active-command-table* (current-command-table self)))
+             (climwi::*active-command-table* (current-command-table self)))
         (flet ((run-command ()
                  (web-monad-handle-request
                     (with-web-monad
@@ -714,7 +714,7 @@ table.clim td, table.clim th {
     ajaxp <- (mquery "__AJAX")
 
     (if (and (presentation-typep value 'command)
-             (not (clim-internals::incomplete-command-p value)))
+             (not (climwi::incomplete-command-p value)))
 
         ;; find the command and look at its type
         (if ajaxp
@@ -745,7 +745,7 @@ table.clim td, table.clim th {
                   (end-request)))
               :== (redirect-to x)
           
-              (clim-internals::command-return-type (find-command (first value) (active-command-table)))
+              (climwi::command-return-type (find-command (first value) (active-command-table)))
               :== return-type
 
               

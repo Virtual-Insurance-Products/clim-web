@@ -45,17 +45,17 @@
 (define-presentation-method default-view-for-accepting ((type thing) (stream (eql :web-monad))
                                                         &key name)
   (make-instance 'minput-acceptor :name name
-                 :options clim-internals::other-options))
+                 :options climwi::other-options))
 
 
 (define-presentation-method default-view-for-accepting ((type and) (stream (eql :web-monad)) &key name)
   (let ((view (default-view-for-accepting (with-presentation-type-decoded (n p o)
-                                              (first clim-internals::??c)
-                                            `((,n ,@p) ,@o ,@clim-internals::other-options))
+                                              (first climwi::??c)
+                                            `((,n ,@p) ,@o ,@climwi::other-options))
                   stream :name name)))
     (when (typep view 'minput-acceptor)
       ;; look for any other type information which can be used to inform the minput acceptor...
-      (dolist (type (cdr clim-internals::??c))
+      (dolist (type (cdr climwi::??c))
         (with-presentation-type-decoded (name parameters)
             type
           (cond ((eq name 'scan)
@@ -69,30 +69,30 @@
 (define-presentation-method default-view-for-accepting ((type date) (stream (eql :web-monad))
                                                         &key name)
   (make-instance 'minput-acceptor :name name
-                 :options (append clim-internals::other-options
+                 :options (append climwi::other-options
                                   '(:type "date"))))
 
 (define-presentation-method default-view-for-accepting ((type one-of) (stream (eql :web-monad))
                                                         &key name)
   (make-instance 'minput-acceptor :name name
-                 :options clim-internals::other-options
+                 :options climwi::other-options
                  :mfunction (lambda (name &rest x)
                               (declare (ignore x))
                               (mselect name
                                        (cons '("-" :error)
-                                             (loop for item in clim-internals::items
+                                             (loop for item in climwi::items
                                                 collect (list item item)))))))
 
 ;; This is very similar to the above
 (define-presentation-method default-view-for-accepting ((type member) (stream (eql :web-monad))
                                                         &key name)
   (make-instance 'minput-acceptor :name name
-                 :options clim-internals::other-options
+                 :options climwi::other-options
                  :mfunction (lambda (name &rest x)
                               (declare (ignore x))
                               (mselect name
                                        (cons '("-" :error)
-                                             (loop for item in clim-internals::objects
+                                             (loop for item in climwi::objects
                                                 collect (list (present-to-string item (list 'eql item))
                                                               item)))))))
 
@@ -166,7 +166,7 @@
   default
   ;; (break)
   (melement (call-next-method)
-    (html (:noescape (:print (or (html-currency-symbol climi::code) "")))
+    (html (:noescape (:print (or (html-currency-symbol climwi::code) "")))
           " ")
     (draw it)))
 
@@ -185,7 +185,7 @@
 (define-presentation-method default-view-for-accepting ((type parameter-list) (stream (eql :web-monad))
                                                         &key name)
   (make-instance 'form-view :name name
-                 :options clim-internals::other-options))
+                 :options climwi::other-options))
 
 
 
@@ -198,7 +198,7 @@
                           (if (and given
                                    (not (and (listp given)
                                              (eq (first given)
-                                                 clim-internals::*incomplete-command-marker*)))
+                                                 climwi::*incomplete-command-marker*)))
                                        
                                    (presentation-typep given x))
                               (mprogn
@@ -238,9 +238,9 @@
                                        ;; The incomplete marker may have been annotated with a default
                                        ;; !!! This needs to be merged with the default passed in to this
                                        :default (typespec-option (second given) :default))))
-                        climi::??parameters
+                        climwi::??parameters
                         (or (given-values view)
-                            (mapcar (constantly nil) climi::??parameters)))
+                            (mapcar (constantly nil) climwi::??parameters)))
     (if (presentation-typep value type)
         (unit value)
         ;; if it's just a list of nils then nothing was entered. Otherwise error

@@ -17,14 +17,14 @@
                                      &key &allow-other-keys)
   ;; !!! Should I make tooltips or something to show the parameters?
   ;; What about elipsis to indicate when more parameters are required?
-  (let ((clim-internals::*active-command-table* object))
-    (clim-internals::apply-with-command-table-inheritance
+  (let ((climwi::*active-command-table* object))
+    (climwi::apply-with-command-table-inheritance
      (lambda (object)
-       (let ((commands (loop for entry in (sort (copy-list (clim-internals::commands object))
+       (let ((commands (loop for entry in (sort (copy-list (climwi::commands object))
                                                 #'string-lessp
-                                                :key #'clim-internals:command-name)
+                                                :key #'climwi:command-name)
                              ;; now we need to make a command from the entry...
-                             for simple-command = (list (clim-internals::command-symbol-name entry))
+                             for simple-command = (list (climwi::command-symbol-name entry))
                              for command = (add-incomplete-markers (append simple-command
                                                                            (provided-arguments view)))
                              ;; I can use this same view since it subclasses url-view. That should make things convenient I THINK
@@ -60,11 +60,11 @@
          (basic-command (apply (set-command view)
                                (cons hole
                                      (additional-parameters view))))
-         (cte (clim-internals:find-command basic-command clim-internals::*active-command-table*))
+         (cte (climwi:find-command basic-command climwi::*active-command-table*))
          (cmd `(js:array
                 ,(command-name cte)
                 ,@(with-presentation-type-decoded (name params)
-                      (clim-internals::command-parameters-type cte)
+                      (climwi::command-parameters-type cte)
                     (declare (ignore name))
                     (loop for x in (cdr basic-command)
                        for i from 0
