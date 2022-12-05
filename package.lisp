@@ -2,7 +2,7 @@
 (in-package :cl-user)
 
 (defpackage :clim-web
-  (:use :cl :clim-internals :web-monad :com.gigamonkeys.html
+  (:use :cl :climwi :web-monad :com.gigamonkeys.html
         :web-transpiler :vip-utils :net.aserve :anaphors
         :monads
         :web-utils

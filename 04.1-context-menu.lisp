@@ -157,16 +157,16 @@ color:white;
 "))))
 
 (defun command-table-entry-first-parameter-type (entry)
-  (second (clim-internals::make-parameter-list
-           (clim-internals::command-parameters entry))))
+  (second (climwi::make-parameter-list
+           (climwi::command-parameters entry))))
 
 ;; (command-table-entry-first-parameter-type (find-command 'com-hello *developer-commands*))
 
 (defun context-menu-commands ()
   (with-web-monad
-    (clim-internals::find-commands-in-table
+    (climwi::find-commands-in-table
      (lambda (entry)
-       (not (clim-internals::command-option entry :no-context-menu))))
+       (not (climwi::command-option entry :no-context-menu))))
     :== commands
     
     (cons 'or
@@ -184,9 +184,9 @@ color:white;
                (lambda (command)
                  (let ((p-type (command-table-entry-first-parameter-type command))
                        (linkp (and (eq 'web-application (command-return-type command))
-                                   (not (cddr (clim-internals::make-parameter-list
-                                               (clim-internals::command-parameters command))))))
-                       (need-confirmation (climi:command-option command :need-confirmation)))
+                                   (not (cddr (climwi::make-parameter-list
+                                               (climwi::command-parameters command))))))
+                       (need-confirmation (climwi:command-option command :need-confirmation)))
                    (if p-type
                        (event-handler
                         (list :presentation p-type)
@@ -194,7 +194,7 @@ color:white;
                         (lambda (object-and-type)
                           `(,(if linkp
                                  '_cl '_ci)
-                             ,(if (cdr (clim-internals::command-parameters command))
+                             ,(if (cdr (climwi::command-parameters command))
                                   (s "~A..." (command-name command))
                                   (command-name command))
                              ,(if linkp

@@ -11,10 +11,10 @@
 ;; the data type will be the command name rather than anything else.
 
 ;; !!! I could/should factor out the event handlers
-(defmethod command-drop-handlers ((command clim-internals::command-table-entry))
+(defmethod command-drop-handlers ((command climwi::command-table-entry))
   (with-presentation-type-decoded (name parameters)
-      (clim-internals::make-parameter-list
-       (clim-internals::command-parameters command))
+      (climwi::make-parameter-list
+       (climwi::command-parameters command))
     name
     (let ((t1 (first parameters))
           (t2 (second parameters)))
@@ -40,20 +40,20 @@
                                                                                 :acceptably t)))))
 
       
-        (cond ((clim-internals::command-option command :drag-above)
+        (cond ((climwi::command-option command :drag-above)
                `(setf this.style.border-top ,(s "8px solid ~A" *highlight-color*)))
-              ((clim-internals::command-option command :drag-below)
+              ((climwi::command-option command :drag-below)
                `(setf this.style.border-bottom ,(s "8px solid ~A" *highlight-color*)))
-              ((clim-internals::command-option command :drag-left)
+              ((climwi::command-option command :drag-left)
                `(setf this.style.border-left ,(s "8px solid ~A" *highlight-color*)))
               (t `(setf this.style.box-shadow ,(s "0 0 15px ~A" *highlight-color*))))
         :== highlight
 
-        (cond ((clim-internals::command-option command :drag-above)
+        (cond ((climwi::command-option command :drag-above)
                `(setf this.style.border-top ""))
-              ((clim-internals::command-option command :drag-below)
+              ((climwi::command-option command :drag-below)
                `(setf this.style.border-bottom ""))
-              ((clim-internals::command-option command :drag-left)
+              ((climwi::command-option command :drag-left)
                `(setf this.style.border-left ""))
               (t `(setf this.style.box-shadow "")))
         :== unhighlight
@@ -67,15 +67,15 @@
                               (event.stop-propagation)
                               ,unhighlight
                               (let ((data (event.data-transfer.get-data ,typespec)))
-                                (when ,(cond ((clim-internals::command-option command :drag-above)
+                                (when ,(cond ((climwi::command-option command :drag-above)
                                               `(and data
                                                     (< event.offset-y
                                                        (/ event.target.client-height 2))))
-                                             ((clim-internals::command-option command :drag-below)
+                                             ((climwi::command-option command :drag-below)
                                               `(and data
                                                     (> event.offset-y
                                                        (/ event.target.client-height 2))))
-                                             ((clim-internals::command-option command :drag-left)
+                                             ((climwi::command-option command :drag-left)
                                               `(and data
                                                     (> event.offset-x
                                                        (/ event.target.client-left 2))))
@@ -98,15 +98,15 @@
                          `(if ,(let ((base `(> (event.data-transfer.types.index-of
                                                 ,typespec)
                                                -1)))
-                                    (cond ((clim-internals::command-option command :drag-above)
+                                    (cond ((climwi::command-option command :drag-above)
                                            `(and ,base
                                                  (< event.offset-y
                                                     (/ event.target.client-height 2))))
-                                          ((clim-internals::command-option command :drag-below)
+                                          ((climwi::command-option command :drag-below)
                                            `(and ,base
                                                  (> event.offset-y
                                                     (/ event.target.client-height 2))))
-                                          ((clim-internals::command-option command :drag-left)
+                                          ((climwi::command-option command :drag-left)
                                            `(and ,base
                                                  (> event.offset-x
                                                     (/ event.target.client-left 2))))
@@ -135,7 +135,7 @@
   (mmapcar :web-monad
            #'command-drop-handlers
            (find-commands-in-table (lambda (x)
-                                     (eq (clim-internals::command-option x :gesture)
+                                     (eq (climwi::command-option x :gesture)
                                          :drag-and-drop))
                                    c)))
 
