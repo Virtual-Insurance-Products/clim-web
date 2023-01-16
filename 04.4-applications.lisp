@@ -144,7 +144,7 @@
                            (present-to-string command 'command :view view))
                  :title (link-title view)
                  :onclick (when use-cp
-                            (js:ps*
+                            (ps:ps*
                              `(progn
                                 ,@ (when (link-require-confirmation view)
                                      '((unless (confirm "Are you sure?")

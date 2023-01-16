@@ -162,7 +162,7 @@
                                                                       :data-x 0 :data-y 0
                                                                       :onmousedown
                                                                       (:print
-                                                                       (js:ps*
+                                                                       (ps:ps*
                                                                         `(when (= 1 event.buttons)
                                                                            (let* ((element this)
                                                                                   (xoff (- event.page-x (parse-int element.dataset.x)))
