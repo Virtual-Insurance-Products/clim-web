@@ -21,6 +21,32 @@
                                      :field-wrapper "field")))))
 
 
+;; This might be better done at compile time.
+;; furthermore, this could evaluate the TYPES which is what the CLIM spec says we should do.
+;; How to make that transition without breaking all existing code? Maybe just change all existing code? Probably a Good Idea - FIXME
+(defun jit-evaluate-command-parameter-spec (command-parameters partial-command-object)
+  (mapcar
+   (lambda (param)
+     (destructuring-bind (name type &key (default nil default-provided-p))
+         param
+       (if default-provided-p
+           (list name
+                 (with-presentation-type-decoded (name parameters options)
+                     type
+                   `((,name ,@parameters)
+                     ,@options
+                     :default ,(eval `(destructuring-bind ,(mapcar #'first command-parameters)
+                                          ',(cdr (mapcar (lambda (p)
+                                                           ;; This is a hack because I'm stuffing extra info in the unsupplied positions unlike what 'normal' people do.
+                                                           (if (and (consp p) (eq (first p) climwi::*unsupplied-argument-marker*))
+                                                               climwi::*unsupplied-argument-marker*
+                                                               p))
+                                                         partial-command-object))
+                                        ,default)))
+                   ))
+           (list name type))))
+   command-parameters))
+
 
 ;; !!! This is the right approach:-
 (define-presentation-method present ((object list)
@@ -43,10 +69,21 @@
                                         (it (climwi::command-name command))))))))
              
              parameters <- (maccept nil ; not used
-                                    (climwi::make-parameter-list
-                                     (climwi::command-parameters command))
+                                    (climwi::make-parameter-list (climwi::command-parameters command))
                                     :view (update-slots view
-                                                        'given-values (cdr object)))
+                                                        'given-values (mapcar (lambda (arg param)
+                                                                                (if (and (consp arg)
+                                                                                         (eq (first arg) climwi::*unsupplied-argument-marker*)
+                                                                                         (not (find :default (second arg))))
+                                                                                    ;; use the computed param instead - it will include runtime calculated default.
+                                                                                    ;; that isn't accounted for anywhere else.
+                                                                                    ;; As a more complete solution for this I need to 
+                                                                                    (list climwi::*unsupplied-argument-marker*
+                                                                                          (second param))
+                                                                                    arg))
+                                                                              (cdr object)
+                                                                              (jit-evaluate-command-parameter-spec (climwi::command-parameters command)
+                                                                                                                   object))))
 
              submit <- (aif (field-option view :submit-label t)
                             (msubmit (list (field-name view) :submit)

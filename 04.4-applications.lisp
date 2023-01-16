@@ -48,6 +48,7 @@
    (link-target :initform nil :initarg :target :reader link-target)
    (link-text :initform nil :initarg :link-text :reader link-text)
    (link-class :initform nil :initarg :link-class :reader link-class)
+   (link-style :initform nil :initarg :link-style :reader link-style)
    (link-icon :initform nil :initarg :link-icon :reader link-icon)
    ;; This can be used to turn arbitrary objects into links by making them into commands
    (link-command :initform nil :initarg :link-command :reader link-command)
@@ -161,7 +162,7 @@
                                                                  'inner-h-t-m-l) "")))
                                         (ex2 ,(present-to-string command 'command) ,(link-output-target view)))
                                      `(ex ,(present-to-string command 'command))))))
-              
+                 :style (link-style view)
                  :class (link-class view)
               
                  (dhtml (awhen (link-icon view)
