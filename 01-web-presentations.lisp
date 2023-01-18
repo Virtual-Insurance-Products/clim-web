@@ -1,5 +1,7 @@
 
 
+;; This relies on other bits of ABEL...
+
 (in-package :clim-web)
 
 ;; !!! Where did the name come in to it?
@@ -168,7 +170,7 @@
 
 ;; (present 12 'integer :stream :html)
 
-;; #'climwi::%present 
+;; #'climwi::%present
 
 ;; default web-monad implementation using just the html one...
 (define-presentation-method present ((object t) (type t) (stream (eql :web-monad))

@@ -61,7 +61,7 @@
                                (cons hole
                                      (additional-parameters view))))
          (cte (climwi:find-command basic-command climwi::*active-command-table*))
-         (cmd `(js:array
+         (cmd `(ps:array
                 ,(command-name cte)
                 ,@(with-presentation-type-decoded (name params)
                       (climwi::command-parameters-type cte)
@@ -74,8 +74,8 @@
                        collect (if (eq x hole)
                                    0 (present-to-string x ptype)))))))
     
-    (js:ps* `(let ((x ,cmd))
-               (setf (js:elt x ,(+ 1 index)) this.value)
+    (ps:ps* `(let ((x ,cmd))
+               (setf (ps:elt x ,(+ 1 index)) this.value)
                (ex (-j-s-o-n.stringify x))))))
 
 (define-presentation-method present ((object editable-value) (type editable-value) (stream stream)
